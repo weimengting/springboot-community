@@ -3,7 +3,6 @@ package com.community.life.controller;
 import com.community.life.bean.Question;
 import com.community.life.bean.User;
 import com.community.life.mapper.QuestionMapper;
-import com.community.life.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -21,8 +19,6 @@ public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
 
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping("/publish")
     public String publish(){
@@ -53,25 +49,11 @@ public class PublishController {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
-        //需要注意的是，此时已经创建了一个user对象，user ！= null始终成立，想要判断是否获得真正的user应该判断user.getName() == null
-        User user = new User();
+        //需要注意的是，如果此时已经创建了一个user对象，user ！= null始终成立，想要判断是否获得真正的user应该判断user.getName() == null
+        User user = (User) request.getSession().getAttribute("user");
         //向浏览器请求该用户的cookie，获取相应的token信息，根据token向数据库中查询相应的user信息
-        Cookie[] cookies = request.getCookies();
-        //考虑到cookie可能不存在的情况
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String value = cookie.getValue();
-                    user = userMapper.findByToken(value);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                        System.out.println(user.getName());
-                    }
-                    break;
-                }
-            }
-        }
-        if (user.getName() == null){
+
+        if (user == null){
             model.addAttribute("error", "用户未登录");
             return "publish";
         }

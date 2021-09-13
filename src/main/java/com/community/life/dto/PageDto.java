@@ -18,7 +18,6 @@ public class PageDto {
     private List<Integer> pages;
 
     public void setPageDto(Integer page, Integer totalPage){
-        System.out.println(page);
         this.page = page;
         this.totalPage = totalPage;
         pages = new ArrayList<>();
@@ -31,7 +30,7 @@ public class PageDto {
                 pages.add(page + i);
             }
         }
-        System.out.println(pages);
+
         //是否展示上一页
         showPrevious = page != 1;
         //是否展示下一页

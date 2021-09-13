@@ -10,3 +10,5 @@
 <textarea class="form-control" name="description" th:text="${description}" id="description" cols="30" rows="10"></textarea>
 ```
 
+thymeleaf模板可以将多个页面公用的元素封装到一个html文件中，在需要用到的地方进行调用，类似于调用Java类文件中的某个方法。
+

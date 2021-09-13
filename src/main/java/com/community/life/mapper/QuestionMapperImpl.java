@@ -21,4 +21,14 @@ public class QuestionMapperImpl implements QuestionMapper {
     public Integer countNum() {
         return null;
     }
+
+    @Override
+    public List<Question> listByUserId(Integer userId, Integer offset, Integer size) {
+        return null;
+    }
+
+    @Override
+    public Integer countNumByUserId(Integer userId) {
+        return null;
+    }
 }
