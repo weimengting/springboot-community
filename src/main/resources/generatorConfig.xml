@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+            "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="spring5Tables" targetRuntime="MyBatis3">
+
+<!--        该插件是为了可以生成支持分页形式的mysql查询语句（不过好像不用也可以）-->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/spring5?rewriteBatchedStatements=true&amp;characterEncoding=utf8"
+                        userId="root"
+                        password="123456">
+<!--            这句话是为了防止生成blob文件-->
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.community.life.bean" targetProject="src\main\java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper"  targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.community.life.mapper"  targetProject="src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <table tableName="user" domainObjectName="User" >
+<!--            默认返回名称带有驼峰标识-->
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+
+        <table tableName="question" domainObjectName="Question" >
+            <!--            默认返回名称带有驼峰标识(自己翻译翻译什么叫“使用实际的列名称”)-->
+            <property name="useActualColumnNames" value="true"/>
+
+        </table>
+
+    </context>
+</generatorConfiguration>

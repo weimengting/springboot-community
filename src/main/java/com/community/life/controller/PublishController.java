@@ -2,11 +2,13 @@ package com.community.life.controller;
 
 import com.community.life.bean.Question;
 import com.community.life.bean.User;
-import com.community.life.mapper.QuestionMapper;
+import com.community.life.dto.QuestionDto;
+import com.community.life.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,7 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Integer id,
+                       Model model){
+        //需要说明一点，此处的id不需要通过model来装载就能传递到前端
+        QuestionDto questionDto = questionService.getById(id);
+        model.addAttribute("title", questionDto.getTitle());
+        model.addAttribute("tag", questionDto.getTag());
+        model.addAttribute("description", questionDto.getDescription());
+        return "publish";
+    }
 
 
     @GetMapping("/publish")
@@ -27,12 +40,12 @@ public class PublishController {
     }
 
     @PostMapping("/publish") //model是用来与前端进行交互的
-    public String doPublish(@RequestParam("title") String title, //接收网页传递过来的参数
-                            @RequestParam("tag") String tag,
-                            @RequestParam("description") String description,
+    public String doPublish(@RequestParam(value = "title", required = false) String title, //接收网页传递过来的参数
+                            @RequestParam(value = "tag", required = false) String tag,
+                            @RequestParam(value = "description", required = false) String description,
+                            @RequestParam(value = "id", required = false) Integer id,
                             HttpServletRequest request,
                             Model model){
-        System.out.println("coming to postmapping...");
 
         model.addAttribute("title", title);
         model.addAttribute("tag", tag);
@@ -57,17 +70,14 @@ public class PublishController {
             model.addAttribute("error", "用户未登录");
             return "publish";
         }
-
+        System.out.println("coming to publishController----/publish");
         Question question = new Question();
         question.setTag(tag);
         question.setTitle(title);
         question.setDescription(description);
         question.setCreator(user.getId());
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(System.currentTimeMillis());
-
-        questionMapper.insert(question);
-
+        question.setId(id);
+        questionService.createOrUpdate(question);
         return "redirect:/";
     }
 }

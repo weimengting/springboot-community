@@ -21,3 +21,12 @@ body {
 .profile .section{
     margin-top: 18px;
 }
+
+.community-menu{
+    color: #999;
+    font-size: 13px;
+}
+
+.jumbotron{
+    margin: 50px;
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>error</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!--    引入静态资源目录下的css文件和js文件-->
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/community.css">
+    <script src="http://localhost:8080/js/jquery-3.6.0.min.js" type="application/javascript"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+    <div class="jumbotron">
+        <h1>出错啦！！！</h1>
+        <p th:text="${message}">服务太热啦，要不然稍等下再来试试~</p>
+        <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
+    </div>
+</body>
+</html>

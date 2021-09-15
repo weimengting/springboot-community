@@ -6,6 +6,7 @@ import com.community.life.dto.AccessTokenDto;
 import com.community.life.dto.GiteeUser;
 import com.community.life.mapper.UserMapper;
 import com.community.life.provider.GiteeProvider;
+import com.community.life.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class AuthorizeController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserService userService;
+
     @Value("${gitee.client.id}") //将配置文件中的属性值注入
     private String clientId;
 
@@ -47,23 +51,30 @@ public class AuthorizeController {
         String accessToken = giteeProvider.getAccessToken(accessTokenDto);
         GiteeUser giteeUser = giteeProvider.getUser(accessToken);
         if (giteeUser != null && giteeUser.getName() != null) {
-            //登陆成功，写入cookie和session
-            System.out.println("success");
-            System.out.println(giteeUser.getName());
+            //登陆成功,绑定一个user对象
             User user = new User();
             String token = UUID.randomUUID().toString();
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(System.currentTimeMillis());
             user.setName(giteeUser.getName());
             user.setAccountId(String.valueOf(giteeUser.getId()));
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(System.currentTimeMillis());
             user.setAvatarUrl(giteeUser.getAvatar_url());
-            userMapper.insert(user); //此时，用数据库的实际存储代替了session会话
+            userService.createOrUpdate(user);
             //以token为信号绑定后端与前端登陆的状态
             response.addCookie(new Cookie("token", token));  //向浏览器中写入cookie
-
-            //request.getSession().setAttribute("user", giteeUser);
         }
         return "redirect:/"; //重定向到index页面（首页）
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        //清除session和cookie
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

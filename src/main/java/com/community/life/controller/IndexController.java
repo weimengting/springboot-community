@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class IndexController {
 
-
     @Autowired
     private QuestionService questionService;
 
@@ -29,8 +28,6 @@ public class IndexController {
         System.out.println("coming to indexController");
         PageDto pageDto = questionService.list(page, size);
         model.addAttribute("pageDto", pageDto);
-        User user = (User) request.getSession().getAttribute("user");
-        //System.out.println(user.getId());
         return "index";   //自动去资源的template里面寻找名字为“hello”的html文件,将该文件渲染成页面
     }
 }

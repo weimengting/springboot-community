@@ -4,9 +4,9 @@
 
 一个简化版的[elastic中文社区](https://elasticsearch.cn/)，功能包括：获取gitee授权登录；发起问题；查看回复等一些交流社区网站通用的功能。
 
-关于gitee授权的问题，初衷是想使用GitHub授权的，无奈国内网访问GitHub总是出现超时的问题，苦于找不到优秀的梯子，在几经周折后作罢，虽然gitee有时也会出现访问超时的情况，但比GitHub稳定得多。
+关于gitee授权，初衷是想使用GitHub授权的，无奈国内网访问GitHub总是出现超时的问题，苦于找不到优秀的梯子，在几经周折后作罢，虽然gitee有时也会出现访问超时的情况，但比GitHub稳定得多。
 
-## 版本
+### 版本
 
 都写在[pom](./pom.xml)里，不详细列举了
 
@@ -17,6 +17,10 @@
 [Spring 文档](https://spring.io/)
 
 [OkHttp](https://square.github.io/okhttp/)
+
+[spring-boot集成mybatis](http://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
+
+[mybatis自动生成crud](http://mybatis.org/generator/index.html)
 
 ### 工具
 
@@ -63,10 +67,8 @@ DELETE FROM USER WHERE avatarUrl IS NULL
 
    profile.html页面需要加一个判断语句
 
-2. 通过userId来获取问题列表不太合适，如果清空浏览器cookie的话，再次登录时会添加一个新的cookie，并生成一个新的userId，而实际上用户是没有发生改变的，所以一个合理的做法是通过用户名来获取问题列表
+2. 如果退出登陆后想使用别的用户信息登录怎么办？对客户端来说可以通过清除浏览器的cookie，能不能通过设置服务器来完成这个要求？（不清空cookie，浏览器中会存有使用过的授权信息）
 
 ### 致谢
 
-非常感谢[**@cambridgejames**](https://github.com/cambridgejames)在学习过程中给予的帮助，很多情况下别人的一句话要比自己debug几个小时管用。
-
-   
+[**@cambridgejames**](https://github.com/cambridgejames)
