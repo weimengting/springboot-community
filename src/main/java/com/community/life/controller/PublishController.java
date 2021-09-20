@@ -2,8 +2,10 @@ package com.community.life.controller;
 
 import com.community.life.bean.Question;
 import com.community.life.bean.User;
+import com.community.life.cache.TagCache;
 import com.community.life.dto.QuestionDto;
 import com.community.life.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,13 +31,15 @@ public class PublishController {
         model.addAttribute("title", questionDto.getTitle());
         model.addAttribute("tag", questionDto.getTag());
         model.addAttribute("description", questionDto.getDescription());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
         System.out.println("coming here...");
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -50,6 +54,7 @@ public class PublishController {
         model.addAttribute("title", title);
         model.addAttribute("tag", tag);
         model.addAttribute("description", description);
+        model.addAttribute("tags", TagCache.get());
         if (title == null || title.equals("")){
             model.addAttribute("error", "标题不能为空");
             return "publish";
@@ -62,6 +67,12 @@ public class PublishController {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
+        String inValid = TagCache.filterInValid(tag);
+        if (StringUtils.isNotBlank(inValid)){
+            model.addAttribute("error", "输入非法标签： " + inValid);
+            return "publish";
+        }
+
         //需要注意的是，如果此时已经创建了一个user对象，user ！= null始终成立，想要判断是否获得真正的user应该判断user.getName() == null
         User user = (User) request.getSession().getAttribute("user");
         //向浏览器请求该用户的cookie，获取相应的token信息，根据token向数据库中查询相应的user信息

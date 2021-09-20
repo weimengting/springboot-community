@@ -20,7 +20,7 @@ public class UserService {
         userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
         List<User> dbUsers = userMapper.selectByExample(userExample);
         if (dbUsers.isEmpty()){  //此时该用户是一个新添加进来的用户
-            //插入
+            //将新数据插入数据库中
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(System.currentTimeMillis());
             userMapper.insert(user);

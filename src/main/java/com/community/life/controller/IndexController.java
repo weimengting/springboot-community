@@ -1,6 +1,5 @@
 package com.community.life.controller;
 
-import com.community.life.bean.User;
 import com.community.life.dto.PageDto;
 import com.community.life.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ public class IndexController {
         //@RequestParam接收来自地址绑定的参数
         //一开始访问该页面时，先去拿到cookie中的token去数据库中验证，可以省略登陆的步骤
         //只适合小数据量的用户访问
-        System.out.println("coming to indexController");
         PageDto pageDto = questionService.list(page, size);
         model.addAttribute("pageDto", pageDto);
         return "index";   //自动去资源的template里面寻找名字为“hello”的html文件,将该文件渲染成页面

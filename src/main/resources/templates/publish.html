@@ -4,10 +4,12 @@
     <title>publish-Community</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <!--    引入静态资源目录下的css文件和js文件-->
+    <link rel="shortcut icon" href="http://localhost:8080/imgs/logo.ico" />
     <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/community.css">
     <script src="../js/jquery-3.6.0.min.js" type="application/javascript"></script>
+    <script src="../js/community.js" type="application/javascript"></script>
     <script src="../js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
@@ -24,17 +26,41 @@
                     <!--                一个输入框，输入问题-->
                     <div class="form-group">
                         <label for="title">问题标题（简单扼要）</label>
-                        <input type="text" class="form-control" th:value="${title}" id="title" name="title" placeholder="问题标题....">
+                        <input type="text" class="form-control"
+                               autocomplete="off"
+                               th:value="${title}" id="title" name="title" placeholder="问题标题....">
                     </div>
                     <!--                问题内容描述的填充区域-->
                     <div class="form-group">
                         <label for="description">问题补充 (必填，请参照右侧提示):</label>
-                        <textarea class="form-control" name="description" th:text="${description}" id="description" cols="30" rows="10"></textarea>
+                        <textarea class="form-control" name="description"
+                                  autocomplete="off" th:text="${description}" id="description" cols="30" rows="10"></textarea>
                     </div>
                     <!--问题的标签栏-->
                     <div class="form-group">
                         <label for="tag">添加标签:</label>
-                        <input type="text" class="form-control" id="tag" name="tag" th:value="${tag}" placeholder="创建或搜索添加新话题">
+                        <input type="text" class="form-control" autocomplete="off"
+                               id="tag" name="tag" th:value="${tag}" onclick="showTags()" placeholder="选择一个或多个标签">
+
+                    <!-- 备选标签-->
+                        <div id="show-tag" class="publish-tag-tab">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" th:each="tagg, taggStatus: ${tags}" th:class="${taggStatus.first ? 'active' : ''}">
+                                    <a th:href="${'#' + tagg.getCategoryName()}" aria-controls="home" role="tab" data-toggle="tab" th:text="${tagg.getCategoryName()}"></a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes, class里面不设置为active，即默认不显示 -->
+                            <div class="tab-content tab-con-pad">
+                                <div role="tabpanel" th:class="${taggStatus.first ? 'active tab-pane' : 'tab-pane'}"
+                                     th:each="tagg, taggStatus : ${tags}" th:id="${tagg.getCategoryName()}">
+                                    <span class="label label-info" th:each="littleTag : ${tagg.getTags()}">
+                                        <span class="glyphicon glyphicon-tags" onclick="selectTag(this)" th:data-tag="${littleTag}" th:text="${' ' + littleTag}"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="container-fluid main">

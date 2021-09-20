@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace表示其对应mapper文件夹中的哪个接口-->
+<mapper namespace="com.community.life.mapper.QuestionExtMapper">
+
+  <resultMap id="BaseResultMap" type="com.community.life.bean.Question">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="gmtCreate" jdbcType="BIGINT" property="gmtCreate" />
+    <result column="gmtModified" jdbcType="BIGINT" property="gmtModified" />
+    <result column="creator" jdbcType="INTEGER" property="creator" />
+    <result column="commentCount" jdbcType="INTEGER" property="commentCount" />
+    <result column="viewCount" jdbcType="INTEGER" property="viewCount" />
+    <result column="likeCount" jdbcType="INTEGER" property="likeCount" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+  </resultMap>
+
+<!--  parameterType表示传递的参数类型,对浏览数执行递增-->
+  <update id="incView" parameterType="com.community.life.bean.Question">
+    update question
+    set
+    viewCount = viewCount + #{viewCount,jdbcType=INTEGER}
+    where id = #{id}
+  </update>
+
+
+<!--  对评论数执行递增-->
+  <update id="incComment" parameterType="com.community.life.bean.Question">
+    update question
+    set
+    commentCount = commentCount + #{commentCount,jdbcType=INTEGER}
+    where id = #{id}
+  </update>
+
+<!--  利用正则匹配含有相似标签内容的问题,返回值为list的情况下应该添加resultType-->
+
+  <select id="selectRelated" parameterType="com.community.life.bean.Question"
+          resultType="com.community.life.bean.Question">
+    select * from question where id != #{id} and tag regexp #{tag}
+  </select>
+
+</mapper>

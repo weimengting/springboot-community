@@ -45,5 +45,15 @@
 
         </table>
 
+        <table tableName="comment" domainObjectName="Comment" >
+            <!--            默认返回名称带有驼峰标识-->
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+
+        <table tableName="notification" domainObjectName="Notification" >
+            <!--            默认返回名称带有驼峰标识-->
+            <property name="useActualColumnNames" value="true"/>
+        </table>
+
     </context>
 </generatorConfiguration>

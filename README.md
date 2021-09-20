@@ -2,7 +2,7 @@
 
 ### 简介（更新ing）
 
-一个简化版的[elastic中文社区](https://elasticsearch.cn/)，功能包括：获取gitee授权登录；发起问题；查看回复等一些交流社区网站通用的功能。
+一个简化版的[elastic中文社区](https://elasticsearch.cn/)，功能包括：获取gitee授权登录；发起问题；回复问题；回复评论等一些交流社区网站通用的功能。
 
 关于gitee授权，初衷是想使用GitHub授权的，无奈国内网访问GitHub总是出现超时的问题，苦于找不到优秀的梯子，在几经周折后作罢，虽然gitee有时也会出现访问超时的情况，但比GitHub稳定得多。
 
@@ -61,13 +61,17 @@ ALTER TABLE USER ADD avatarUrl VARCHAR(100)
 DELETE FROM USER WHERE avatarUrl IS NULL
 ```
 
+```bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```
+
 ### 问题（待完善部分）
 
 1. 如果用户没有发起提问，现有的程序会抛出异常
 
    profile.html页面需要加一个判断语句
 
-2. 如果退出登陆后想使用别的用户信息登录怎么办？对客户端来说可以通过清除浏览器的cookie，能不能通过设置服务器来完成这个要求？（不清空cookie，浏览器中会存有使用过的授权信息）
+2. question页面显示标签时，有一个split以逗号分割的语句，只能识别英文输入的逗号，中文逗号不起作用
 
 ### 致谢
 
