@@ -20,12 +20,19 @@ public class IndexController {
     public String hello(HttpServletRequest request,
                         Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
-                        @RequestParam(name = "size", defaultValue = "5") Integer size){
+                        @RequestParam(name = "size", defaultValue = "5") Integer size,
+                        @RequestParam(name = "search", required = false) String search){
         //@RequestParam接收来自地址绑定的参数
         //一开始访问该页面时，先去拿到cookie中的token去数据库中验证，可以省略登陆的步骤
         //只适合小数据量的用户访问
-        PageDto pageDto = questionService.list(page, size);
+        PageDto pageDto = questionService.list(search, page, size);
+
+        if (pageDto.getData() == null && pageDto.getTotalPage() == null){
+            model.addAttribute("pageDto", pageDto);
+            return "index";
+        }
         model.addAttribute("pageDto", pageDto);
+        model.addAttribute("searchch", search);
         return "index";   //自动去资源的template里面寻找名字为“hello”的html文件,将该文件渲染成页面
     }
 }

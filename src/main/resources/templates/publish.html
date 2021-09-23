@@ -5,12 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <!--    引入静态资源目录下的css文件和js文件-->
     <link rel="shortcut icon" href="http://localhost:8080/imgs/logo.ico" />
-    <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/community.css">
-    <script src="../js/jquery-3.6.0.min.js" type="application/javascript"></script>
-    <script src="../js/community.js" type="application/javascript"></script>
-    <script src="../js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/community.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/editormd.css">
+    <script src="http://localhost:8080/js/jquery-3.6.0.min.js" type="application/javascript"></script>
+    <script src="http://localhost:8080/js/community.js" type="application/javascript"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="http://localhost:8080/js/editormd.min.js" type="application/javascript"></script>
+
 </head>
 <body>
     <div th:insert="~{navigation :: nav}"></div>
@@ -30,12 +33,29 @@
                                autocomplete="off"
                                th:value="${title}" id="title" name="title" placeholder="问题标题....">
                     </div>
-                    <!--                问题内容描述的填充区域-->
-                    <div class="form-group">
+                    <!--                问题内容描述的填充区域,添加了支持markdown语法-->
+                    <div class="form-group" id="question-editor">
                         <label for="description">问题补充 (必填，请参照右侧提示):</label>
-                        <textarea class="form-control" name="description"
+                        <textarea class="form-control" name="description" style="display: none"
                                   autocomplete="off" th:text="${description}" id="description" cols="30" rows="10"></textarea>
                     </div>
+
+                    <script type="text/javascript">
+                        $(function() {
+                            var editor = editormd("question-editor", {
+                                width  : "100%",
+                                height : 350,
+                                path   : "/js/lib/",
+                                delay : 0,
+                                placeholder: "输入问题描述~~~",
+                                emoji : true,
+                                imageUpload    : true,
+                                imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                                imageUploadURL : "/file/upload"
+                            });
+                        });
+                    </script>
+
                     <!--问题的标签栏-->
                     <div class="form-group">
                         <label for="tag">添加标签:</label>
@@ -88,5 +108,6 @@
             </div>
         </div>
     </div>
+    <div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

@@ -39,4 +39,29 @@
     select * from question where id != #{id} and tag regexp #{tag}
   </select>
 
+
+  <!--  利用正则匹配含有搜索的条目的问题,返回值为list的情况下应该添加resultType-->
+
+  <select id="countBySearch" parameterType="com.community.life.dto.QuestionQueryDto" resultType="java.lang.Integer">
+    select count(1) from question
+    <where>
+      <if test="search != null">
+        and title regexp #{search}
+      </if>
+    </where>
+  </select>
+
+  <!--  利用正则匹配含有搜索内容内容的问题,返回值为list的情况下应该添加resultType-->
+
+  <select id="selectBySearch" parameterType="com.community.life.dto.QuestionQueryDto"
+          resultType="com.community.life.bean.Question">
+    select * from question
+    <where>
+      <if test="search != null">
+        and title regexp #{search}
+      </if>
+    </where>
+    order by gmtCreate desc limit #{page}, #{size}
+  </select>
+
 </mapper>

@@ -1,14 +1,12 @@
 ## 社区项目搭建
 
-### 简介（更新ing）
+### 简介
 
 一个简化版的[elastic中文社区](https://elasticsearch.cn/)，功能包括：获取gitee授权登录；发起问题；回复问题；回复评论等一些交流社区网站通用的功能。
 
-关于gitee授权，初衷是想使用GitHub授权的，无奈国内网访问GitHub总是出现超时的问题，苦于找不到优秀的梯子，在几经周折后作罢，虽然gitee有时也会出现访问超时的情况，但比GitHub稳定得多。
-
 ### 版本
 
-都写在[pom](./pom.xml)里，不详细列举了
+都在[pom](./pom.xml)里
 
 ### 资源
 
@@ -30,6 +28,10 @@
 
 [maven工具包](https://mvnrepository.com/)
 
+[json在线编辑](http://jsoneditoronline.cn/)
+
+[开源在线 Markdown 编辑器](https://pandao.github.io/editor.md/)
+
 ### 脚本
 
 ```sql
@@ -42,7 +44,6 @@ CREATE TABLE `user`(
 	token CHAR(36),
 	gmtCreate BIGINT,
 	gmtModified BIGINT)CHARSET=utf8;
-SELECT * FROM USER
 
 CREATE TABLE question(
 		id INT PRIMARY KEY AUTO_INCREMENT,
@@ -55,10 +56,17 @@ CREATE TABLE question(
 		viewCount INT DEFAULT 0,
 		likeCount INT DEFAULT 0,
 		tag VARCHAR(256))CHARSET=utf8
-SELECT * FROM question
+		
+CREATE TABLE notification(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	notifier INT NOT NULL DEFAULT 0,
+	receiver INT NOT NULL DEFAULT 0,
+	outerId INT NOT NULL DEFAULT 0,
+	TYPE INT NOT NULL,
+	gmtCreate BIGINT NOT NULL,
+	gmtModified BIGINT NOT NULL,
+	STATUS INT NOT NULL)CHARSET=utf8;
 
-ALTER TABLE USER ADD avatarUrl VARCHAR(100)
-DELETE FROM USER WHERE avatarUrl IS NULL
 ```
 
 ```bash
@@ -67,12 +75,8 @@ mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 
 ### 问题（待完善部分）
 
-1. 如果用户没有发起提问，现有的程序会抛出异常
+1. ~~如果用户没有发起提问，现有的程序会抛出异常~~ 
 
-   profile.html页面需要加一个判断语句
+   已解决
 
-2. question页面显示标签时，有一个split以逗号分割的语句，只能识别英文输入的逗号，中文逗号不起作用
-
-### 致谢
-
-[**@cambridgejames**](https://github.com/cambridgejames)
+2. Cross-Origin Read Blocking (CORB)加载editor.md的时候出现跨域获取资源失败

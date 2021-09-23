@@ -2,16 +2,12 @@ package com.community.life.controller;
 
 import com.community.life.bean.User;
 import com.community.life.dto.NotificationDto;
-import com.community.life.dto.PageDto;
 import com.community.life.enums.NotificationEnum;
-import com.community.life.enums.NotificationStatusEnum;
 import com.community.life.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 

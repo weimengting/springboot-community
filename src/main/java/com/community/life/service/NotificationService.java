@@ -5,6 +5,7 @@ import com.community.life.dto.NotificationDto;
 import com.community.life.dto.PageDto;
 import com.community.life.dto.QuestionDto;
 import com.community.life.enums.NotificationEnum;
+import com.community.life.enums.NotificationStatusEnum;
 import com.community.life.exception.CustomizeErrorCode;
 import com.community.life.exception.CustomizeException;
 import com.community.life.mapper.NotificationMapper;
@@ -25,9 +26,6 @@ public class NotificationService {
 
     @Autowired
     private NotificationMapper notificationMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     public PageDto list(Integer userId, Integer page, Integer size) {
         PageDto<NotificationDto> pageDto = new PageDto<>();
@@ -53,6 +51,7 @@ public class NotificationService {
         //返回收件人是userId的所有通知
         NotificationExample example = new NotificationExample();
         example.createCriteria().andReceiverEqualTo(userId);
+        example.setOrderByClause("gmtCreate desc");
         List<Notification> notifications =
                 notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
         if (notifications.isEmpty()){
@@ -73,7 +72,7 @@ public class NotificationService {
 
     public Long unreadCount(Integer id) {
         NotificationExample notificationExample = new NotificationExample();
-        notificationExample.createCriteria().andReceiverEqualTo(id);
+        notificationExample.createCriteria().andReceiverEqualTo(id).andStatusEqualTo(NotificationStatusEnum.UNREAD.getStatus());
         long num = notificationMapper.countByExample(notificationExample);
         return num;
     }
@@ -87,6 +86,8 @@ public class NotificationService {
         if (!user.getId().equals(receiver)){  //防止用户在路径中输入错误的通知id
             throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
         }
+        notification.setStatus(NotificationStatusEnum.READ.getStatus());
+        notificationMapper.updateByPrimaryKey(notification);
         NotificationDto notificationDto = new NotificationDto();
         BeanUtils.copyProperties(notification, notificationDto);
         notificationDto.setTypeName(NotificationEnum.nameOfType(notification.getType()));

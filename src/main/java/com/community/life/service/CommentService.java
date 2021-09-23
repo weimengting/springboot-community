@@ -69,7 +69,8 @@ public class CommentService {
             parentComment.setCommentCount(1);
             commentExtMapper.incComment(parentComment);
             //创建通知
-            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationEnum.REPLY_COMMENT);
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(),
+                    question.getTitle(), NotificationEnum.REPLY_COMMENT, question.getId());
         }
         else {
             //回复问题的功能
@@ -83,7 +84,8 @@ public class CommentService {
             questionExtMapper.incComment(question);
 
             //创建通知
-            createNotify(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationEnum.REPLY_QUESTION);
+            createNotify(comment, question.getCreator(), commentator.getName(),
+                    question.getTitle(), NotificationEnum.REPLY_QUESTION, question.getId());
         }
     }
 
@@ -115,13 +117,17 @@ public class CommentService {
         return commentDtos;
     }
 
-    private void createNotify(Comment comment, Integer commentator,
-                              String notifierName, String outerTitle, NotificationEnum type){
+    //无论什么情况下都跳转到question上面
+    private void createNotify(Comment comment, Integer commentator, String notifierName,
+                              String outerTitle, NotificationEnum type, Integer questionId){
+        if (commentator.equals(comment.getCommentator())){
+            return;
+        }
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setGmtModified(System.currentTimeMillis());
         notification.setType(type.getStatus());
-        notification.setOuterId(comment.getParentId());
+        notification.setOuterId(questionId);
         notification.setNotifier(comment.getCommentator());
         notification.setReceiver(commentator);
         notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());

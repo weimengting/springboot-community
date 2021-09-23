@@ -5,6 +5,7 @@ import com.community.life.bean.QuestionExample;
 import com.community.life.bean.User;
 import com.community.life.dto.PageDto;
 import com.community.life.dto.QuestionDto;
+import com.community.life.dto.QuestionQueryDto;
 import com.community.life.exception.CustomizeErrorCode;
 import com.community.life.exception.CustomizeException;
 import com.community.life.mapper.QuestionExtMapper;
@@ -33,8 +34,26 @@ public class QuestionService {
     private QuestionExtMapper questionExtMapper;
 
     //首页滚动的问题列表
-    public PageDto list(Integer page, Integer size){
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+    public PageDto list(String search, Integer page, Integer size){
+        if (search != null){
+            System.out.println("search内容的长度：" + search.length());
+        }
+
+        if (StringUtils.isNotBlank(search) && search.length() > 0){
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+        else {
+            search = null;
+        }
+
+        QuestionQueryDto questionQueryDto = new QuestionQueryDto();
+        questionQueryDto.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDto);
+        if (totalCount == 0){
+            return new PageDto<QuestionDto>();
+        }
+
         Integer totalPage;
         if (totalCount % size == 0){
             totalPage = totalCount / size;
@@ -50,10 +69,15 @@ public class QuestionService {
         }
         Integer offset = size * (page - 1);
         //从第几条开始的多少条记录
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmtCreate desc");
-        List<Question> questions =
-                questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
+//        QuestionExample questionExample = new QuestionExample();
+//        questionExample.setOrderByClause("gmtCreate desc");
+
+        questionQueryDto.setPage(offset);
+        questionQueryDto.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDto);
+
+//        List<Question> questions =
+//                questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDto> questionDtos = new ArrayList<>();
         PageDto<QuestionDto> pageDto = new PageDto<>();
         for (Question question : questions) {
@@ -111,6 +135,7 @@ public class QuestionService {
 
     //根据问题的id返回相应的问题
     public QuestionDto getById(Integer id){
+        System.out.println(id);
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);

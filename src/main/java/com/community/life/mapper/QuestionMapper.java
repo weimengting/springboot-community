@@ -3,6 +3,8 @@ package com.community.life.mapper;
 import com.community.life.bean.Question;
 import com.community.life.bean.QuestionExample;
 import java.util.List;
+
+import com.community.life.dto.QuestionQueryDto;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
@@ -134,4 +136,5 @@ public interface QuestionMapper {
      * @mbg.generated Mon Sep 20 16:14:41 CST 2021
      */
     int updateByPrimaryKey(Question record);
+
 }
